@@ -3,11 +3,19 @@ import { Play, Sparkles, TrendingUp, Loader2 } from 'lucide-react';
 import { useJamendoTracks } from '../hooks/useJamendoTracks';
 import { useJamendoPlaylists } from '../hooks/useJamendoPlaylists';
 import { usePlayer } from '../context/PlayerContext';
+import DeveloperModal from './DeveloperModal';
 
 const MainContent = () => {
     const { playlists, loading: loadingPlaylists } = useJamendoPlaylists();
     const { tracks, loading, error } = useJamendoTracks({ limit: 50 });
     const { playSong } = usePlayer();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalTitle, setModalTitle] = useState('');
+
+    const openModal = (title) => {
+        setModalTitle(title);
+        setIsModalOpen(true);
+    };
 
     const handleSongClick = (song) => {
         playSong(song, tracks);
@@ -18,10 +26,26 @@ const MainContent = () => {
             {/* Header */}
             <div className="sticky top-0 bg-black/10 backdrop-blur-xl px-10 py-5 flex items-center justify-end z-20 transition-all border-b border-white/5 shadow-sm">
                 <div className="flex items-center gap-8">
-                    <button className="text-gray-300 font-semibold tracking-wide hover:text-white transition-colors text-lg">Sign up</button>
-                    <button className="bg-brand text-white font-bold px-10 py-3 rounded-full hover:shadow-[0_0_25px_rgba(34,211,238,0.4)] transition-all transform hover:-translate-y-1 text-lg">Log in</button>
+                    <button 
+                        onClick={() => openModal('Crear cuenta')}
+                        className="text-gray-300 font-semibold tracking-wide hover:text-white transition-colors text-lg"
+                    >
+                        Sign up
+                    </button>
+                    <button 
+                        onClick={() => openModal('Iniciar sesión')}
+                        className="bg-brand text-white font-bold px-10 py-3 rounded-full hover:shadow-[0_0_25px_rgba(34,211,238,0.4)] transition-all transform hover:-translate-y-1 text-lg"
+                    >
+                        Log in
+                    </button>
                 </div>
             </div>
+
+            <DeveloperModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                title={modalTitle} 
+            />
 
             <div className="p-10 pb-32">
                 {/* Hero Section */}
